@@ -5,4 +5,10 @@
     <string name="login_empty_error">Login cannot be empty.</string>
     <string name="password_empty_error">Password cannot be empty.</string>
     <string name="login_call_error">Login was not successful.</string>
+    <string name="button_send_payment">Send payment</string>
+    <string name="enter_amount">Enter amount</string>
+    <string name="button_create_payment">Send payment</string>
+    <string name="amount_empty_error">Amount cannot be empty.</string>
+    <string name="create_call_error">Creating payment was not successful.</string>
+    <string name="button_play_again">Play again</string>
 </resources>
