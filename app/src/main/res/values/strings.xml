@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">CC2016 Project</string>
+    <string name="login">Login</string>
+    <string name="password">Password</string>
+    <string name="login_empty_error">Login cannot be empty.</string>
+    <string name="password_empty_error">Password cannot be empty.</string>
+    <string name="login_call_error">Login was not successful.</string>
+</resources>
