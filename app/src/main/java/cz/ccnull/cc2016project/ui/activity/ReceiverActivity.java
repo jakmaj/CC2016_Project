@@ -11,36 +11,27 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
+import cz.ccnull.cc2016project.App;
 import cz.ccnull.cc2016project.R;
+import cz.ccnull.cc2016project.model.Payment;
 import io.chirp.sdk.ChirpSDK;
 import io.chirp.sdk.ChirpSDKListener;
 import io.chirp.sdk.model.ChirpError;
 import io.chirp.sdk.model.ShortCode;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ReceiverActivity extends AppCompatActivity {
 
     private static final int RESULT_REQUEST_RECORD_AUDIO = 0;
 
     private ChirpSDK mChirpSDK;
-    private Button mButtonSend;
-    private ChirpSDKListener chirpSDKListener = new ChirpSDKListener() {
-        @Override
-        public void onChirpHeard(final ShortCode shortCode) {
-            Log.d("listener", "ShortCode received: " + shortCode.getShortCode());
-            runOnUiThread(new Runnable() { // Chirp is listening on background thread, so need this to manipulate with UI
-                @Override
-                public void run() {
-                    //TODO
-                }
-            });
-        }
 
-        @Override
-        public void onChirpError(ChirpError error) {
-            Log.d("listener", "ShortCode received error: " + error.getMessage());
-        }
-    };
+    private Button mButtonSend;
+    private TextView mTextStatus;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +48,7 @@ public class ReceiverActivity extends AppCompatActivity {
         mChirpSDK = new ChirpSDK(this, "", "");
         mChirpSDK.setListener(chirpSDKListener);
 
+        mTextStatus = (TextView) findViewById(R.id.text_status);
         mButtonSend = (Button) findViewById(R.id.button_send_payment);
         mButtonSend.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -91,4 +83,44 @@ public class ReceiverActivity extends AppCompatActivity {
             }
         }
     }
+
+    private ChirpSDKListener chirpSDKListener = new ChirpSDKListener() {
+        @Override
+        public void onChirpHeard(final ShortCode shortCode) {
+            Log.d("listener", "ShortCode received: " + shortCode.getShortCode());
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    mTextStatus.setText("Payment code received - sending to server");
+                }
+            });
+
+            Call<Payment> call = App.getInstance().getApiDescription().paymentHeard(
+                    App.getInstance().getCurrentUser().getAuthToken(),
+                    shortCode.getShortCode());
+
+            call.enqueue(new Callback<Payment>() {
+                @Override
+                public void onResponse(Call<Payment> call, Response<Payment> response) {
+                    Payment payment = response.body();
+                    if (payment != null) {
+                        mTextStatus.setText("Payment from: " + payment.getSenderName());
+                    } else {
+                        mTextStatus.setText("Sending to server failed...");
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Payment> call, Throwable t) {
+                    mTextStatus.setText("Sending to server failed...");
+                }
+            });
+
+        }
+
+        @Override
+        public void onChirpError(ChirpError error) {
+            Log.d("listener", "ShortCode received error: " + error.getMessage());
+        }
+    };
 }

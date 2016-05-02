@@ -18,4 +18,12 @@ public interface ApiDescription {
 
     @GET(Config.URL_CREATE_PAYMENT)
     Call<Payment> createPayment(@Query("auth_token") String token, @Query("amount") String amount);
+
+    @FormUrlEncoded
+    @POST(Config.URL_PAYMENT_HEARD)
+    Call<Payment> paymentHeard(@Field("auth_token") String token, @Field("payment_code") String code);
+
+    @FormUrlEncoded
+    @POST(Config.URL_PAYMENT_CONFIRM)
+    Call<Payment> paymentConfirm(@Field("auth_token") String token, @Field("payment_code") String code, @Field("payment_receiver") String receiver);
 }

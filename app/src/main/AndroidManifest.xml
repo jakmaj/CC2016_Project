@@ -24,6 +24,11 @@
         </activity>
         <activity android:name=".ui.activity.SenderActivity">
         </activity>
+
+        <provider
+            android:name=".provider.DataProvider"
+            android:authorities="${applicationId}"
+            android:exported="false"/>
     </application>
 
 </manifest>

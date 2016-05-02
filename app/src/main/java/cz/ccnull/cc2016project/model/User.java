@@ -1,8 +1,12 @@
 package cz.ccnull.cc2016project.model;
 
+import com.google.gson.annotations.SerializedName;
+
 public class User {
 
     String name;
+
+    @SerializedName("token")
     String authToken;
 
     public String getAuthToken() {

@@ -30,6 +30,7 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:support-v4:23.3.0'
     compile 'com.android.support:appcompat-v7:23.3.0'
+    compile 'com.android.support:recyclerview-v7:23.3.0'
 
     compile 'io.chirp.sdk:chirp-sdk-release:1.0.4@aar'
     compile 'com.squareup.dagger:dagger:1.2.2'

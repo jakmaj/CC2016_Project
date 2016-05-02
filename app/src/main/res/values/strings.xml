@@ -11,4 +11,6 @@
     <string name="amount_empty_error">Amount cannot be empty.</string>
     <string name="create_call_error">Creating payment was not successful.</string>
     <string name="button_play_again">Play again</string>
+    <string name="confirm_call_error">Confirmation has not been successful.</string>
+    <string name="payment_successful">Payment has been successful.</string>
 </resources>
