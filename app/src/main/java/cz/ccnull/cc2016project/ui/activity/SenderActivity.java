@@ -1,6 +1,7 @@
 package cz.ccnull.cc2016project.ui.activity;
 
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -104,8 +105,6 @@ public class SenderActivity extends AppCompatActivity implements LoaderManager.L
 
         mChirpSDK = new ChirpSDK(this, "", "");
         mChirpSDK.setListener(chirpSDKListener);
-
-        getSupportLoaderManager().initLoader(LOADER_RECEIVERS, null, this);
     }
 
     @Override
@@ -122,7 +121,9 @@ public class SenderActivity extends AppCompatActivity implements LoaderManager.L
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new CursorLoader(this, DataProvider.RECEIVERS_URI, null, null, null, null);
+        if (mPayment == null) return null;
+        Uri uri = DataProvider.RECEIVERS_URI.buildUpon().appendPath(mPayment.getCode()).build();
+        return new CursorLoader(this, uri, null, null, null, null);
     }
 
     @Override
@@ -180,6 +181,8 @@ public class SenderActivity extends AppCompatActivity implements LoaderManager.L
         mRecyclerView.setVisibility(View.VISIBLE);
 
         playSound();
+
+        getSupportLoaderManager().initLoader(LOADER_RECEIVERS, null, this);
     }
 
     private void playSound() {
