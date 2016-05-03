@@ -72,10 +72,11 @@ public class SenderActivity extends AppCompatActivity implements LoaderManager.L
                     mEditAmount.setError(getString(R.string.amount_empty_error));
                     return;
                 }
+                int amountNumber = Integer.parseInt(amount);
 
                 Call<Payment> call = App.getInstance().getApiDescription().createPayment(
                         App.getInstance().getCurrentUser().getAuthToken(),
-                        amount);
+                        amountNumber);
 
                 showProgressCreate(true);
 
