@@ -3,20 +3,27 @@ package cz.ccnull.cc2016project.ui.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
+
 import cz.ccnull.cc2016project.App;
 import cz.ccnull.cc2016project.R;
+import cz.ccnull.cc2016project.gcm.RegistrationIntentService;
 import cz.ccnull.cc2016project.model.User;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity {
+    public static final String TAG = LoginActivity.class.getName();
+    private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
 
     private EditText mEditLogin;
     private EditText mEditPassword;
@@ -27,6 +34,11 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        if (checkPlayServices()) {
+            Intent intent = new Intent(this, RegistrationIntentService.class);
+            startService(intent);
+        }
 
         mEditLogin = (EditText) findViewById(R.id.edit_login);
         mEditPassword = (EditText) findViewById(R.id.edit_password);
@@ -78,5 +90,21 @@ public class LoginActivity extends AppCompatActivity {
     public void showProgress(boolean show) {
         mProgressBar.setVisibility(show ? View.VISIBLE : View.GONE);
         mButtonLogin.setEnabled(!show);
+    }
+
+    private boolean checkPlayServices() {
+        GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
+        int resultCode = apiAvailability.isGooglePlayServicesAvailable(this);
+        if (resultCode != ConnectionResult.SUCCESS) {
+            if (apiAvailability.isUserResolvableError(resultCode)) {
+                apiAvailability.getErrorDialog(this, resultCode, PLAY_SERVICES_RESOLUTION_REQUEST)
+                        .show();
+            } else {
+                Log.i(TAG, "This device is not supported.");
+                finish();
+            }
+            return false;
+        }
+        return true;
     }
 }

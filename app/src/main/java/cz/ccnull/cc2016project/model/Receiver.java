@@ -29,6 +29,12 @@ public class Receiver {
         this.name = cursor.getString(cursor.getColumnIndex(COL_NAME));
     }
 
+    public Receiver(String paymentCode, String userId, String name) {
+        this.paymentCode = paymentCode;
+        this.userId = userId;
+        this.name = name;
+    }
+
     public ContentValues getContentValues() {
         ContentValues cv = new ContentValues();
         cv.put(COL_PAYMENT_CODE, paymentCode);

@@ -77,7 +77,8 @@ public class SenderActivity extends AppCompatActivity implements LoaderManager.L
 
                 Call<Payment> call = App.getInstance().getApiDescription().createPayment(
                         App.getInstance().getCurrentUser().getAuthToken(),
-                        amountNumber);
+                        amountNumber,
+                        App.getInstance().getPreferences().getString(App.GCM_TOKEN_KEY, ""));
 
                 showProgressCreate(true);
 

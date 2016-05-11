@@ -1,6 +1,8 @@
 package cz.ccnull.cc2016project;
 
 import android.app.Application;
+import android.content.Context;
+import android.content.SharedPreferences;
 
 import com.facebook.stetho.Stetho;
 import com.facebook.stetho.okhttp3.StethoInterceptor;
@@ -15,6 +17,9 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class App extends Application {
+
+    public static final String SP_NAME = "prefs";
+    public static final String GCM_TOKEN_KEY = "gcm_token";
 
     private ApiDescription apiDescription;
     private User currentUser;
@@ -61,6 +66,10 @@ public class App extends Application {
 
     public void setCurrentUser(User user) {
         this.currentUser = user;
+    }
+
+    public SharedPreferences getPreferences() {
+        return getSharedPreferences(SP_NAME, Context.MODE_PRIVATE);
     }
 
 }
