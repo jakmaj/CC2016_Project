@@ -24,12 +24,12 @@ public class RegistrationIntentService extends IntentService {
         Log.d(TAG, "onHandleIntent() called with: " + "intent = [" + intent + "]");
         InstanceID instanceID = InstanceID.getInstance(this);
         try {
-            String token = instanceID.getToken(getString(R.string.gcm_sender_id),
+            String token = instanceID.getToken(getString(R.string.google_app_id),
                     GoogleCloudMessaging.INSTANCE_ID_SCOPE, null);
 
             Log.i(TAG, "GCM Registration Token: " + token);
 
-            App.getInstance().getPreferences().edit().putString(App.GCM_TOKEN_KEY, token).commit();
+            App.getInstance().getPreferences().edit().putString(App.SP_GCM_TOKEN_KEY, token).commit();
 
         } catch (IOException e) {
             e.printStackTrace();

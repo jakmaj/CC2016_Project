@@ -98,7 +98,7 @@ public class ReceiverActivity extends AppCompatActivity {
             Call<Payment> call = App.getInstance().getApiDescription().paymentHeard(
                     App.getInstance().getCurrentUser().getAuthToken(),
                     shortCode.getShortCode(),
-                    App.getInstance().getPreferences().getString(App.GCM_TOKEN_KEY, ""));
+                    App.getInstance().getPreferences().getString(App.SP_GCM_TOKEN_KEY, ""));
 
             call.enqueue(new Callback<Payment>() {
                 @Override

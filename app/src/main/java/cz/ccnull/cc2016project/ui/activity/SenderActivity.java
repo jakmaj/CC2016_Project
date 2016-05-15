@@ -32,6 +32,7 @@ import retrofit2.Response;
 
 public class SenderActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
+    private static final String KEY_PAYMENT = "payment";
     private static final int LOADER_RECEIVERS = 1;
 
     private EditText mEditAmount;
@@ -78,7 +79,7 @@ public class SenderActivity extends AppCompatActivity implements LoaderManager.L
                 Call<Payment> call = App.getInstance().getApiDescription().createPayment(
                         App.getInstance().getCurrentUser().getAuthToken(),
                         amountNumber,
-                        App.getInstance().getPreferences().getString(App.GCM_TOKEN_KEY, ""));
+                        App.getInstance().getPreferences().getString(App.SP_GCM_TOKEN_KEY, ""));
 
                 showProgressCreate(true);
 
@@ -89,7 +90,7 @@ public class SenderActivity extends AppCompatActivity implements LoaderManager.L
                         Payment payment = response.body();
                         if (payment != null && payment.getCode() != null) {
                             mPayment = payment;
-                            paymentCodeReady();
+                            paymentCodeReady(true);
                         } else {
                             Toast.makeText(SenderActivity.this, R.string.create_call_error, Toast.LENGTH_LONG).show();
                         }
@@ -106,6 +107,13 @@ public class SenderActivity extends AppCompatActivity implements LoaderManager.L
 
         mChirpSDK = new ChirpSDK(this, "", "");
         mChirpSDK.setListener(chirpSDKListener);
+
+        if (savedInstanceState != null) {
+            mPayment = savedInstanceState.getParcelable(KEY_PAYMENT);
+            if (mPayment != null) {
+                paymentCodeReady(false);
+            }
+        }
     }
 
     @Override
@@ -118,6 +126,12 @@ public class SenderActivity extends AppCompatActivity implements LoaderManager.L
     protected void onPause() {
         super.onPause();
         mChirpSDK.stopListening();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(KEY_PAYMENT, mPayment);
     }
 
     @Override
@@ -175,13 +189,13 @@ public class SenderActivity extends AppCompatActivity implements LoaderManager.L
         mRecyclerView.setAdapter(mAdapter);
     }
 
-    private void paymentCodeReady() {
+    private void paymentCodeReady(boolean play) {
         mButtonCreate.setVisibility(View.GONE);
         mEditAmount.setEnabled(false);
         mButtonPlay.setVisibility(View.VISIBLE);
         mRecyclerView.setVisibility(View.VISIBLE);
 
-        playSound();
+        if (play) playSound();
 
         getSupportLoaderManager().initLoader(LOADER_RECEIVERS, null, this);
     }

@@ -15,9 +15,9 @@ public class MyGcmListenerService extends GcmListenerService {
     public static final String NOTIFICATION_HEARD = "heard";
     public static final String NOTIFICATION_CONFIRM = "confirm";
 
-    public static final String HEARD_PAYMENT_CODE = "payment_code";
-    public static final String HEARD_USER_ID = "user_id";
-    public static final String HEARD_NAME = "user_name";
+    public static final String HEARD_PAYMENT_CODE = "paymentCode";
+    public static final String HEARD_USER_ID = "_idReceiver";
+    public static final String HEARD_NAME = "nameReceiver";
 
     @Override
     public void onMessageReceived(String from, Bundle data) {

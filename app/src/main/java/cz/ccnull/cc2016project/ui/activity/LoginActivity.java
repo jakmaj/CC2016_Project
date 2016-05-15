@@ -6,6 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -28,6 +30,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText mEditLogin;
     private EditText mEditPassword;
     private Button mButtonLogin;
+    private CheckBox mCheckRemember;
     private ProgressBar mProgressBar;
 
     @Override
@@ -43,7 +46,11 @@ public class LoginActivity extends AppCompatActivity {
         mEditLogin = (EditText) findViewById(R.id.edit_login);
         mEditPassword = (EditText) findViewById(R.id.edit_password);
         mButtonLogin = (Button) findViewById(R.id.button_login);
+        mCheckRemember = (CheckBox) findViewById(R.id.check_remember);
         mProgressBar = (ProgressBar) findViewById(android.R.id.progress);
+
+        mEditLogin.setText(App.getInstance().getPreferences().getString(App.SP_LOGIN, ""));
+        mCheckRemember.setChecked(!App.getInstance().getPreferences().getString(App.SP_LOGIN, "").equals(""));
 
         mButtonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,10 +92,21 @@ public class LoginActivity extends AppCompatActivity {
                 });
             }
         });
+
+        mCheckRemember.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                String login = isChecked ? mEditLogin.getText().toString() : "";
+                App.getInstance().getPreferences().edit().putString(App.SP_LOGIN, login).commit();
+            }
+        });
     }
 
     public void showProgress(boolean show) {
         mProgressBar.setVisibility(show ? View.VISIBLE : View.GONE);
+        mEditLogin.setEnabled(!show);
+        mEditPassword.setEnabled(!show);
+        mCheckRemember.setEnabled(!show);
         mButtonLogin.setEnabled(!show);
     }
 

@@ -13,5 +13,6 @@
     <string name="button_play_again">Play again</string>
     <string name="confirm_call_error">Confirmation has not been successful.</string>
     <string name="payment_successful">Payment has been successful.</string>
-    <string name="gcm_sender_id">554220373880</string>
+    <string name="google_app_id">554220373880</string>
+    <string name="remember_login">Remember login</string>
 </resources>

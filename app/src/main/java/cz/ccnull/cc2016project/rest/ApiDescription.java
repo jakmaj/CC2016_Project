@@ -16,11 +16,11 @@ public interface ApiDescription {
 
     @FormUrlEncoded
     @POST(Config.URL_CREATE_PAYMENT)
-    Call<Payment> createPayment(@Field("token") String token, @Field("amount") int amount, @Field("tokenGCM") String tokenGCM);
+    Call<Payment> createPayment(@Field("token") String token, @Field("amount") int amount, @Field("androidToken") String tokenGCM);
 
     @FormUrlEncoded
     @POST(Config.URL_PAYMENT_HEARD)
-    Call<Payment> paymentHeard(@Field("token") String token, @Field("paymentCode") String code, @Field("tokenGCM") String tokenGCM);
+    Call<Payment> paymentHeard(@Field("token") String token, @Field("paymentCode") String code, @Field("androidToken") String tokenGCM);
 
     @FormUrlEncoded
     @POST(Config.URL_PAYMENT_CONFIRM)
