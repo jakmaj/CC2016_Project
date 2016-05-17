@@ -49,7 +49,7 @@ public class DataProvider extends ContentProvider {
         return Uri.withAppendedPath(RECEIVERS_URI, values.getAsString(Receiver.COL_PAYMENT_CODE));
     }
 
-    public void notifyUri(Uri uri) {
+    private void notifyUri(Uri uri) {
         getContext().getContentResolver().notifyChange(uri, null);
     }
 

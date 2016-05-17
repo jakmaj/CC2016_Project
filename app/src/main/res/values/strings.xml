@@ -15,4 +15,5 @@
     <string name="payment_successful">Payment has been successful.</string>
     <string name="google_app_id">554220373880</string>
     <string name="remember_login">Remember login</string>
+    <string name="please_wait">Please wait…</string>
 </resources>

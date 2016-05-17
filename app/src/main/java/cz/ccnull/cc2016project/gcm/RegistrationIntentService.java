@@ -10,6 +10,7 @@ import com.google.android.gms.iid.InstanceID;
 import java.io.IOException;
 
 import cz.ccnull.cc2016project.App;
+import cz.ccnull.cc2016project.Config;
 import cz.ccnull.cc2016project.R;
 
 public class RegistrationIntentService extends IntentService {
@@ -29,7 +30,7 @@ public class RegistrationIntentService extends IntentService {
 
             Log.i(TAG, "GCM Registration Token: " + token);
 
-            App.getInstance().getPreferences().edit().putString(App.SP_GCM_TOKEN_KEY, token).commit();
+            App.getInstance().getPreferences().edit().putString(Config.SP_GCM_TOKEN_KEY, token).commit();
 
         } catch (IOException e) {
             e.printStackTrace();

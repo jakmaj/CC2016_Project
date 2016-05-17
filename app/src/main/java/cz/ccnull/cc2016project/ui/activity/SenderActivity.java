@@ -1,5 +1,7 @@
 package cz.ccnull.cc2016project.ui.activity;
 
+import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -16,6 +18,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import cz.ccnull.cc2016project.App;
+import cz.ccnull.cc2016project.Config;
 import cz.ccnull.cc2016project.R;
 import cz.ccnull.cc2016project.listener.OnItemClickListener;
 import cz.ccnull.cc2016project.model.Payment;
@@ -32,7 +35,6 @@ import retrofit2.Response;
 
 public class SenderActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
-    private static final String KEY_PAYMENT = "payment";
     private static final int LOADER_RECEIVERS = 1;
 
     private EditText mEditAmount;
@@ -50,6 +52,7 @@ public class SenderActivity extends AppCompatActivity implements LoaderManager.L
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_sender);
 
         mEditAmount = (EditText) findViewById(R.id.edit_amount);
@@ -79,7 +82,7 @@ public class SenderActivity extends AppCompatActivity implements LoaderManager.L
                 Call<Payment> call = App.getInstance().getApiDescription().createPayment(
                         App.getInstance().getCurrentUser().getAuthToken(),
                         amountNumber,
-                        App.getInstance().getPreferences().getString(App.SP_GCM_TOKEN_KEY, ""));
+                        App.getInstance().getPreferences().getString(Config.SP_GCM_TOKEN_KEY, ""));
 
                 showProgressCreate(true);
 
@@ -90,6 +93,7 @@ public class SenderActivity extends AppCompatActivity implements LoaderManager.L
                         Payment payment = response.body();
                         if (payment != null && payment.getCode() != null) {
                             mPayment = payment;
+                            mPayment.setAmount(Integer.parseInt(mEditAmount.getText().toString()));
                             paymentCodeReady(true);
                         } else {
                             Toast.makeText(SenderActivity.this, R.string.create_call_error, Toast.LENGTH_LONG).show();
@@ -109,7 +113,7 @@ public class SenderActivity extends AppCompatActivity implements LoaderManager.L
         mChirpSDK.setListener(chirpSDKListener);
 
         if (savedInstanceState != null) {
-            mPayment = savedInstanceState.getParcelable(KEY_PAYMENT);
+            mPayment = savedInstanceState.getParcelable(Config.KEY_PAYMENT);
             if (mPayment != null) {
                 paymentCodeReady(false);
             }
@@ -131,7 +135,7 @@ public class SenderActivity extends AppCompatActivity implements LoaderManager.L
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelable(KEY_PAYMENT, mPayment);
+        outState.putParcelable(Config.KEY_PAYMENT, mPayment);
     }
 
     @Override
@@ -162,7 +166,7 @@ public class SenderActivity extends AppCompatActivity implements LoaderManager.L
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         mAdapter = new ReceiverAdapter(new OnItemClickListener<Receiver>() {
             @Override
-            public void onItemClick(Receiver receiver) {
+            public void onItemClick(final Receiver receiver) {
                 Call<Payment> call = App.getInstance().getApiDescription().paymentConfirm(
                         App.getInstance().getCurrentUser().getAuthToken(),
                         receiver.getPaymentCode(),
@@ -172,8 +176,11 @@ public class SenderActivity extends AppCompatActivity implements LoaderManager.L
                     @Override
                     public void onResponse(Call<Payment> call, Response<Payment> response) {
                         if (response.body() != null) {
-                            Toast.makeText(SenderActivity.this, R.string.payment_successful, Toast.LENGTH_LONG).show();
-                            finish();
+                            mPayment.setReceiverName(receiver.getName());
+                            Intent intent = new Intent(SenderActivity.this, ResultActivity.class);
+                            intent.putExtra(Config.KEY_PAYMENT, mPayment);
+                            intent.putExtra(Config.KEY_ROLE, Config.ROLE_SENDER);
+                            startActivity(intent);
                         } else {
                             Toast.makeText(SenderActivity.this, R.string.confirm_call_error, Toast.LENGTH_LONG).show();
                         }

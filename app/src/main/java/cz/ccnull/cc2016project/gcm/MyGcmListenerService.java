@@ -1,23 +1,28 @@
 package cz.ccnull.cc2016project.gcm;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
 import com.google.android.gms.gcm.GcmListenerService;
 
+import cz.ccnull.cc2016project.App;
+import cz.ccnull.cc2016project.Config;
 import cz.ccnull.cc2016project.model.Receiver;
 import cz.ccnull.cc2016project.provider.DataProvider;
 
 public class MyGcmListenerService extends GcmListenerService {
-    public static final String TAG = MyGcmListenerService.class.getName();
+    private static final String TAG = MyGcmListenerService.class.getName();
 
-    public static final String NOTIFICATION_TYPE = "notification_type";
-    public static final String NOTIFICATION_HEARD = "heard";
-    public static final String NOTIFICATION_CONFIRM = "confirm";
+    private static final String NOTIFICATION_TYPE = "notification_type";
+    private static final String NOTIFICATION_HEARD = "heard";
+    private static final String NOTIFICATION_CONFIRM = "confirm";
 
-    public static final String HEARD_PAYMENT_CODE = "paymentCode";
-    public static final String HEARD_USER_ID = "_idReceiver";
-    public static final String HEARD_NAME = "nameReceiver";
+    private static final String HEARD_PAYMENT_CODE = "payment_code";
+    private static final String HEARD_USER_ID = "user_id";
+    private static final String HEARD_NAME = "user_name";
+
+    private static final String CONFIRM_PAYMENT_CODE = "payment_code";
 
     @Override
     public void onMessageReceived(String from, Bundle data) {
@@ -36,7 +41,12 @@ public class MyGcmListenerService extends GcmListenerService {
     }
 
     private void sendConfirmation(Bundle data) {
+        String code = data.getString(CONFIRM_PAYMENT_CODE);
+        App.getInstance().getPreferences().edit().putString(Config.KEY_CONFIRM, code).commit();
 
+        Intent intent = new Intent(Config.BROADCAST_CONFIRM);
+        intent.putExtra(Config.KEY_PAYMENT_CODE, code);
+        sendBroadcast(intent);
     }
 
     private void createReceiver(Bundle data) {

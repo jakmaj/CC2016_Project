@@ -7,17 +7,18 @@ import com.google.gson.annotations.SerializedName;
 
 public class Payment implements Parcelable {
 
-    int amount;
-    boolean paymentDone;
+    private int amount;
+    private boolean paymentDone;
+    private String receiverName;
 
     @SerializedName("nameSender")
-    String senderName;
+    private String senderName;
 
     @SerializedName("_idSender")
-    String senderId;
+    private String senderId;
 
     @SerializedName("paymentCode")
-    String code;
+    private String code;
 
     public String getCode() {
         return code;
@@ -59,6 +60,14 @@ public class Payment implements Parcelable {
         this.senderId = senderId;
     }
 
+    public String getReceiverName() {
+        return receiverName;
+    }
+
+    public void setReceiverName(String receiverName) {
+        this.receiverName = receiverName;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -68,6 +77,7 @@ public class Payment implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.amount);
         dest.writeByte(this.paymentDone ? (byte) 1 : (byte) 0);
+        dest.writeString(this.receiverName);
         dest.writeString(this.senderName);
         dest.writeString(this.senderId);
         dest.writeString(this.code);
@@ -76,15 +86,16 @@ public class Payment implements Parcelable {
     public Payment() {
     }
 
-    protected Payment(Parcel in) {
+    private Payment(Parcel in) {
         this.amount = in.readInt();
         this.paymentDone = in.readByte() != 0;
+        this.receiverName = in.readString();
         this.senderName = in.readString();
         this.senderId = in.readString();
         this.code = in.readString();
     }
 
-    public static final Parcelable.Creator<Payment> CREATOR = new Parcelable.Creator<Payment>() {
+    public static final Creator<Payment> CREATOR = new Creator<Payment>() {
         @Override
         public Payment createFromParcel(Parcel source) {
             return new Payment(source);

@@ -1,6 +1,8 @@
 package cz.ccnull.cc2016project.ui.activity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -9,13 +11,13 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 
 import cz.ccnull.cc2016project.App;
+import cz.ccnull.cc2016project.Config;
 import cz.ccnull.cc2016project.R;
 import cz.ccnull.cc2016project.gcm.RegistrationIntentService;
 import cz.ccnull.cc2016project.model.User;
@@ -24,18 +26,20 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity {
-    public static final String TAG = LoginActivity.class.getName();
+    private static final String TAG = LoginActivity.class.getName();
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
 
     private EditText mEditLogin;
     private EditText mEditPassword;
     private Button mButtonLogin;
     private CheckBox mCheckRemember;
-    private ProgressBar mProgressBar;
+
+    private ProgressDialog mDialogProgress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_login);
 
         if (checkPlayServices()) {
@@ -47,10 +51,9 @@ public class LoginActivity extends AppCompatActivity {
         mEditPassword = (EditText) findViewById(R.id.edit_password);
         mButtonLogin = (Button) findViewById(R.id.button_login);
         mCheckRemember = (CheckBox) findViewById(R.id.check_remember);
-        mProgressBar = (ProgressBar) findViewById(android.R.id.progress);
 
-        mEditLogin.setText(App.getInstance().getPreferences().getString(App.SP_LOGIN, ""));
-        mCheckRemember.setChecked(!App.getInstance().getPreferences().getString(App.SP_LOGIN, "").equals(""));
+        mEditLogin.setText(App.getInstance().getPreferences().getString(Config.SP_LOGIN, ""));
+        mCheckRemember.setChecked(!App.getInstance().getPreferences().getString(Config.SP_LOGIN, "").equals(""));
 
         mButtonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,11 +76,13 @@ public class LoginActivity extends AppCompatActivity {
                 call.enqueue(new Callback<User>() {
                     @Override
                     public void onResponse(Call<User> call, Response<User> response) {
+                        Log.d(TAG, "onResponseLogin");
                         showProgress(false);
                         User user = response.body();
                         if (user != null && user.getAuthToken() != null) {
                             App.getInstance().setCurrentUser(user);
                             Intent intent = new Intent(LoginActivity.this, ReceiverActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                             startActivity(intent);
                         } else {
                             Toast.makeText(LoginActivity.this, R.string.login_call_error, Toast.LENGTH_LONG).show();
@@ -86,6 +91,7 @@ public class LoginActivity extends AppCompatActivity {
 
                     @Override
                     public void onFailure(Call<User> call, Throwable t) {
+                        Log.d(TAG, "onFailureLogin");
                         showProgress(false);
                         Toast.makeText(LoginActivity.this, R.string.login_call_error, Toast.LENGTH_LONG).show();
                     }
@@ -97,17 +103,23 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 String login = isChecked ? mEditLogin.getText().toString() : "";
-                App.getInstance().getPreferences().edit().putString(App.SP_LOGIN, login).commit();
+                App.getInstance().getPreferences().edit().putString(Config.SP_LOGIN, login).commit();
             }
         });
     }
 
-    public void showProgress(boolean show) {
-        mProgressBar.setVisibility(show ? View.VISIBLE : View.GONE);
-        mEditLogin.setEnabled(!show);
-        mEditPassword.setEnabled(!show);
-        mCheckRemember.setEnabled(!show);
-        mButtonLogin.setEnabled(!show);
+    private void showProgress(boolean show) {
+        if (mDialogProgress == null) {
+            mDialogProgress = new ProgressDialog(this);
+            mDialogProgress.setMessage(getString(R.string.please_wait));
+            mDialogProgress.setIndeterminate(true);
+        }
+
+        if (show) {
+            mDialogProgress.show();
+        } else {
+            mDialogProgress.cancel();
+        }
     }
 
     private boolean checkPlayServices() {

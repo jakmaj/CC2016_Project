@@ -18,9 +18,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class App extends Application {
 
-    public static final String SP_NAME = "prefs";
-    public static final String SP_GCM_TOKEN_KEY = "gcm_token";
-    public static final String SP_LOGIN = "login";
+    private static final String SP_NAME = "prefs";
 
     private ApiDescription apiDescription;
     private User currentUser;
