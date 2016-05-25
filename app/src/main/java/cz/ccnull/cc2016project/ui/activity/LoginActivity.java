@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -52,7 +53,13 @@ public class LoginActivity extends AppCompatActivity {
         mButtonLogin = (Button) findViewById(R.id.button_login);
         mCheckRemember = (CheckBox) findViewById(R.id.check_remember);
 
-        mEditLogin.setText(App.getInstance().getPreferences().getString(Config.SP_LOGIN, ""));
+        String savedLogin = App.getInstance().getPreferences().getString(Config.SP_LOGIN, "");
+        if (!savedLogin.equals("")) {
+            mEditLogin.setText(savedLogin);
+            if (mEditPassword.requestFocus()) {
+                getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+            }
+        }
         mCheckRemember.setChecked(!App.getInstance().getPreferences().getString(Config.SP_LOGIN, "").equals(""));
 
         mButtonLogin.setOnClickListener(new View.OnClickListener() {

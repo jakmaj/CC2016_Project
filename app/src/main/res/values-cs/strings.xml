@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Finanční holub</string>
+    <string name="login">Přihlásit se</string>
+    <string name="password">Heslo</string>
+    <string name="login_empty_error">Vyplňte prosím svůj e-mail.</string>
+    <string name="password_empty_error">Vyplňte prosím heslo.</string>
+    <string name="login_call_error">Nepodařilo se přihlásit.</string>
+    <string name="button_send_payment">Odeslat platbu</string>
+    <string name="enter_amount">Zadejte částku</string>
+    <string name="button_create_payment">Poslat peníze</string>
+    <string name="amount_empty_error">Částka nemůže být prázdná.</string>
+    <string name="create_call_error">Creating payment was not successful.</string>
+    <string name="button_play_again">Přehrát znovu</string>
+    <string name="confirm_call_error">Confirmation has not been successful.</string>
+    <string name="payment_successful">Hotovo, platba proběhla úspěšně!</string>
+    <string name="payment_successful_send">přijal %1$d Kč</string>
+    <string name="payment_successful_receive">Vám zaslal %1$d Kč</string>
+    <string name="google_app_id">554220373880</string>
+    <string name="remember_login">Zapamatovat e-mail</string>
+    <string name="please_wait">Prosím čekejte…</string>
+    <string name="email">E-mail</string>
+    <string name="searching_for_receiver">Vyhledávám příjemce</string>
+    <string name="searching_for_receiver_desc">Telefony přiložte k sobě, přenos probíhá pomocí zvuku.</string>
+    <string name="confirm_payment">Potvrdit platbu</string>
+    <string name="receiver_call_error">Receiving of payment was not successful</string>
+</resources>

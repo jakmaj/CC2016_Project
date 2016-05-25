@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import cz.ccnull.cc2016project.R;
@@ -43,16 +44,17 @@ public class ReceiverAdapter extends RecyclerView.Adapter<ReceiverAdapter.ViewHo
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView name;
+        Button confirm;
 
         public ViewHolder(View itemView) {
             super(itemView);
             name = (TextView) itemView.findViewById(R.id.text_name);
+            confirm = (Button) itemView.findViewById(R.id.button_confirm);
         }
 
         public void bindReceiver(final Receiver receiver) {
             name.setText(receiver.getName());
-
-            itemView.setOnClickListener(new View.OnClickListener() {
+            confirm.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     listener.onItemClick(receiver);

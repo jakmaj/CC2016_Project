@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">CC2016 Project</string>
+    <string name="app_name">Payment pidgeon</string>
     <string name="login">Login</string>
     <string name="password">Password</string>
     <string name="login_empty_error">Login cannot be empty.</string>
@@ -12,8 +12,17 @@
     <string name="create_call_error">Creating payment was not successful.</string>
     <string name="button_play_again">Play again</string>
     <string name="confirm_call_error">Confirmation has not been successful.</string>
-    <string name="payment_successful">Payment has been successful.</string>
+    <string name="payment_successful">Done, payment has been successful!</string>
+    <string name="payment_successful_send">received %1$d Kč</string>
+    <string name="payment_successful_receive">has sent you %1$d Kč</string>
     <string name="google_app_id">554220373880</string>
     <string name="remember_login">Remember login</string>
     <string name="please_wait">Please wait…</string>
+    <string name="email">E-mail</string>
+    <string name="ok_sign">OK sign</string>
+    <string name="user_picture">user picture</string>
+    <string name="searching_for_receiver">Searching for receivers</string>
+    <string name="searching_for_receiver_desc">Put phones close, transmitting data through sound.</string>
+    <string name="confirm_payment">Confirm payment</string>
+    <string name="receiver_call_error">Receiving of payment was not successful</string>
 </resources>

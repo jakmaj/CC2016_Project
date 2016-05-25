@@ -15,7 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import cz.ccnull.cc2016project.App;
 import cz.ccnull.cc2016project.Config;
@@ -38,7 +38,6 @@ public class ReceiverActivity extends AppCompatActivity {
     private Payment mPayment;
 
     private Button mButtonSend;
-    private TextView mTextStatus;
 
     private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
         @Override
@@ -64,7 +63,6 @@ public class ReceiverActivity extends AppCompatActivity {
         mChirpSDK = new ChirpSDK(this, "", "");
         mChirpSDK.setListener(chirpSDKListener);
 
-        mTextStatus = (TextView) findViewById(R.id.text_status);
         mButtonSend = (Button) findViewById(R.id.button_send_payment);
         mButtonSend.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -144,12 +142,6 @@ public class ReceiverActivity extends AppCompatActivity {
         @Override
         public void onChirpHeard(final ShortCode shortCode) {
             Log.d("listener", "ShortCode received: " + shortCode.getShortCode());
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    mTextStatus.setText("Payment code received - sending to server");
-                }
-            });
 
             Call<Payment> call = App.getInstance().getApiDescription().paymentHeard(
                     App.getInstance().getCurrentUser().getAuthToken(),
@@ -162,15 +154,14 @@ public class ReceiverActivity extends AppCompatActivity {
                     mPayment = response.body();
                     if (mPayment != null) {
                         mPayment.setCode(shortCode.getShortCode());
-                        mTextStatus.setText("Payment from: " + mPayment.getSenderName());
                     } else {
-                        mTextStatus.setText("Sending to server failed...");
+                        Toast.makeText(ReceiverActivity.this, R.string.receiver_call_error, Toast.LENGTH_LONG).show();
                     }
                 }
 
                 @Override
                 public void onFailure(Call<Payment> call, Throwable t) {
-                    mTextStatus.setText("Sending to server failed...");
+                    Toast.makeText(ReceiverActivity.this, R.string.receiver_call_error, Toast.LENGTH_LONG).show();
                 }
             });
 
