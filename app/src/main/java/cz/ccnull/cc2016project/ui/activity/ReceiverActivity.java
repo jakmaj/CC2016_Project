@@ -61,7 +61,6 @@ public class ReceiverActivity extends AppCompatActivity {
         }
 
         mChirpSDK = new ChirpSDK(this, "", "");
-        mChirpSDK.setListener(chirpSDKListener);
 
         mButtonSend = (Button) findViewById(R.id.button_send_payment);
         mButtonSend.setOnClickListener(new View.OnClickListener() {
@@ -81,6 +80,7 @@ public class ReceiverActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         paymentConfirm(null);
+        mChirpSDK.setListener(chirpSDKListener);
         mChirpSDK.startListening();
     }
 

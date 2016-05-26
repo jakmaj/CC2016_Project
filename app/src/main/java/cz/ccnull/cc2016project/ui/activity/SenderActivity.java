@@ -117,7 +117,6 @@ public class SenderActivity extends AppCompatActivity implements LoaderManager.L
         });
 
         mChirpSDK = new ChirpSDK(this, "", "");
-        mChirpSDK.setListener(chirpSDKListener);
 
         if (savedInstanceState != null) {
             mPayment = savedInstanceState.getParcelable(Config.KEY_PAYMENT);
@@ -130,6 +129,7 @@ public class SenderActivity extends AppCompatActivity implements LoaderManager.L
     @Override
     protected void onResume() {
         super.onResume();
+        mChirpSDK.setListener(chirpSDKListener);
         mChirpSDK.startListening();
     }
 
