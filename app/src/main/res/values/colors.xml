@@ -5,4 +5,7 @@
     <color name="colorAccent">#6670E3</color>
     <color name="greenBG">#82CD46</color>
     <color name="white">#FFFFFF</color>
+    <color name="blueDark">#1F2248</color>
+    <color name="blueLight">#31346F</color>
+    <color name="blueBorder">#5A60D0</color>
 </resources>
