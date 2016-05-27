@@ -53,11 +53,9 @@ public class DataProvider extends ContentProvider {
         getContext().getContentResolver().notifyChange(uri, null);
     }
 
-
     @Override
     public int delete(@NonNull Uri uri, String selection, String[] selectionArgs) {
-        String code = uri.getLastPathSegment();
-        int count = mOpenHelper.deleteReceiversForPaymentCode(code);
+        int count = mOpenHelper.deleteReceivers();
         notifyUri(uri);
         return count;
     }

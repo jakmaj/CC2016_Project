@@ -1,6 +1,8 @@
 package cz.ccnull.cc2016project.gcm;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -56,8 +58,21 @@ public class MyGcmListenerService extends GcmListenerService {
 
         Receiver receiver = new Receiver(paymentCode, userId, name);
 
-        getContentResolver().insert(
-                DataProvider.RECEIVERS_URI,
-                receiver.getContentValues());
+        Uri uri = DataProvider.RECEIVERS_URI.buildUpon().appendPath(paymentCode).build();
+        Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+        boolean found = false;
+        while (cursor.moveToNext()) {
+            if (cursor.getString(cursor.getColumnIndex(Receiver.COL_USER_ID)).equals(userId)) {
+                found = true;
+                break;
+            }
+        }
+        cursor.close();
+
+        if (!found) {
+            getContentResolver().insert(
+                    DataProvider.RECEIVERS_URI,
+                    receiver.getContentValues());
+        }
     }
 }

@@ -2,6 +2,7 @@ package cz.ccnull.cc2016project.ui.activity;
 
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.res.ResourcesCompat;
@@ -31,15 +32,24 @@ public class ResultActivity extends AppCompatActivity {
         ImageView imagePhoto = (ImageView) findViewById(R.id.image_photo);
 
         if (role.equals(Config.ROLE_SENDER)) {
-            imagePhoto.setImageDrawable(ResourcesCompat.getDrawable(getResources(),
-                    R.drawable.user_pic1, null));
+            imagePhoto.setImageDrawable(getUserPhoto(payment.getReceiverName()));
             textName.setText(payment.getReceiverName());
             textStatus.setText(getString(R.string.payment_successful_send, payment.getAmount()));
         } else {
-            imagePhoto.setImageDrawable(ResourcesCompat.getDrawable(getResources(),
-                    R.drawable.user_pic2, null));
+            imagePhoto.setImageDrawable(getUserPhoto(payment.getSenderName()));
             textName.setText(payment.getSenderName());
             textStatus.setText(getString(R.string.payment_successful_receive, payment.getAmount()));
+        }
+    }
+
+    private Drawable getUserPhoto(String name) {
+        switch (name) {
+            case "První uživatel":
+                return ResourcesCompat.getDrawable(getResources(), R.drawable.user_pic1, null);
+            case "Druhý uživatel":
+                return ResourcesCompat.getDrawable(getResources(), R.drawable.user_pic2, null);
+            default:
+                return ResourcesCompat.getDrawable(getResources(), R.drawable.user_pic3, null);
         }
     }
 }

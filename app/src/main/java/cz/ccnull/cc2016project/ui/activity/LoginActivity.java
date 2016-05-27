@@ -3,6 +3,7 @@ package cz.ccnull.cc2016project.ui.activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -22,6 +23,7 @@ import cz.ccnull.cc2016project.Config;
 import cz.ccnull.cc2016project.R;
 import cz.ccnull.cc2016project.gcm.RegistrationIntentService;
 import cz.ccnull.cc2016project.model.User;
+import cz.ccnull.cc2016project.provider.DataProvider;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -113,6 +115,8 @@ public class LoginActivity extends AppCompatActivity {
                 App.getInstance().getPreferences().edit().putString(Config.SP_LOGIN, login).commit();
             }
         });
+
+        new ClearDatabase().execute();
     }
 
     private void showProgress(boolean show) {
@@ -143,5 +147,22 @@ public class LoginActivity extends AppCompatActivity {
             return false;
         }
         return true;
+    }
+
+    private class ClearDatabase extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            getContentResolver().delete(DataProvider.RECEIVERS_URI, null, null);
+            return null;
+        }
+
+        @Override
+        protected void onPreExecute() {
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+        }
     }
 }

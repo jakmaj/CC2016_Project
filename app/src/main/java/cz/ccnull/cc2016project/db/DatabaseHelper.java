@@ -9,7 +9,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 import cz.ccnull.cc2016project.model.Receiver;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
-    public static final String TAG = DatabaseHelper.class.getName();
     private static final String DB_NAME = "data.db";
     private static final int DB_VERSION = 1;
 
@@ -31,8 +30,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return getWritableDatabase().insert(Receiver.TABLE_NAME, null, contentValues);
     }
 
-    public int deleteReceiversForPaymentCode(String code) {
-        return getWritableDatabase().delete(Receiver.TABLE_NAME, Receiver.COL_PAYMENT_CODE + " = ?", new String[]{code});
+    public int deleteReceivers() {
+        return getWritableDatabase().delete(Receiver.TABLE_NAME, null, null);
     }
 
     public Cursor getReceiverForPaymentCode(String code) {

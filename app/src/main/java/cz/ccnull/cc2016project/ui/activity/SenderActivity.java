@@ -174,7 +174,7 @@ public class SenderActivity extends AppCompatActivity implements LoaderManager.L
 
     private void initRecyclerView() {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-        mAdapter = new ReceiverAdapter(new OnItemClickListener<Receiver>() {
+        mAdapter = new ReceiverAdapter(this, new OnItemClickListener<Receiver>() {
             @Override
             public void onItemClick(final Receiver receiver) {
                 Call<Payment> call = App.getInstance().getApiDescription().paymentConfirm(
